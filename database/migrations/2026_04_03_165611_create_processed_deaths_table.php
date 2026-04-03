@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('processed_deaths', function (Blueprint $table) {
             $table->id();
+            $table->string('event_id')->unique();
+            $table->string('albion_player_id');
             $table->timestamps();
         });
     }

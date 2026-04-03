@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'discord' => [
+        'webhook_kills' => env('DISCORD_WEBHOOK_KILLS'),
+        'webhook_deaths' => env('DISCORD_WEBHOOK_DEATHS'),
+    ],
+
 ];

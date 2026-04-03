@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
+            $table->string('albion_id')->unique();
+            $table->string('name')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
