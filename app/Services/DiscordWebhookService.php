@@ -15,7 +15,7 @@ class DiscordWebhookService
         $this->deathsWebhookUrl = config('services.discord.webhook_deaths');
     }
 
-    public function sendKillAlert(array $kill): void
+    public function sendKillAlert(array $kill, ?string $inventoryImage = null): void
     {
         $killer = $kill['Killer']['Name'] ?? 'Unknown';
         $victim = $kill['Victim']['Name'] ?? 'Unknown';
@@ -23,23 +23,38 @@ class DiscordWebhookService
         $killId = $kill['EventId'];
         $time = substr($kill['TimeStamp'], 0, 19) . 'Z';
 
-        Http::post($this->killsWebhookUrl, [
-            'embeds' => [[
-                'title' => '⚔️ New Kill Alert!',
-                'color' => 0xFF4444,
-                'url' => "https://albiononline.com/killboard/kill/{$killId}",
-                'timestamp' => $time,
-                'fields' => [
-                    ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
-                    ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
-                    ['name' => '📍 Location', 'value' => $location, 'inline' => false],
-                ],
-                'footer' => ['text' => "Kill ID: {$killId}"],
-            ]]
-        ]);
+        $killboardUrl = "https://albiononline.com/killboard/kill/{$killId}?server=live_ams";
+
+        $embed = [
+            'title' => '⚔️ New Kill Alert!',
+            'color' => 0xFF4444,
+            'url' => $killboardUrl,
+            'timestamp' => $time,
+            'fields' => [
+                ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
+                ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
+                ['name' => '📍 Location', 'value' => $location, 'inline' => false],
+                ['name' => '🔗 Killboard', 'value' => "[View Details]({$killboardUrl})", 'inline' => false],
+            ],
+            'footer' => ['text' => "Kill ID: {$killId}"],
+        ];
+
+        if ($inventoryImage) {
+            $embed['image'] = ['url' => 'attachment://inventory.png'];
+
+            Http::attach(
+                'files[0]',
+                base64_decode($inventoryImage),
+                'inventory.png'
+            )->post($this->killsWebhookUrl, [
+                'payload_json' => json_encode(['embeds' => [$embed]])
+            ]);
+        } else {
+            Http::post($this->killsWebhookUrl, ['embeds' => [$embed]]);
+        }
     }
 
-    public function sendDeathAlert(array $death): void
+    public function sendDeathAlert(array $death, ?string $inventoryImage = null): void
     {
         $killer = $death['Killer']['Name'] ?? 'Unknown';
         $victim = $death['Victim']['Name'] ?? 'Unknown';
@@ -47,38 +62,34 @@ class DiscordWebhookService
         $deathId = $death['EventId'];
         $time = substr($death['TimeStamp'], 0, 19) . 'Z';
 
-        Http::post($this->deathsWebhookUrl, [
-            'embeds' => [[
-                'title' => '💀 Player Death Alert!',
-                'color' => 0x808080,
-                'url' => "https://albiononline.com/killboard/kill/{$deathId}",
-                'timestamp' => $time,
-                'fields' => [
-                    ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
-                    ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
-                    ['name' => '📍 Location', 'value' => $location, 'inline' => false],
-                ],
-                'footer' => ['text' => "Death ID: {$deathId}"],
-            ]]
-        ]);
-    }
+        $killboardUrl = "https://albiononline.com/killboard/kill/{$deathId}?server=live_ams";
 
-    public function sendInventoryImage(string $base64Image, string $type = 'kill'): void
-    {
-        $webhookUrl = $type === 'kill' ? $this->killsWebhookUrl : $this->deathsWebhookUrl;
+        $embed = [
+            'title' => '💀 Player Death Alert!',
+            'color' => 0x808080,
+            'url' => $killboardUrl,
+            'timestamp' => $time,
+            'fields' => [
+                ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
+                ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
+                ['name' => '📍 Location', 'value' => $location, 'inline' => false],
+                ['name' => '🔗 Killboard', 'value' => "[View Details]({$killboardUrl})", 'inline' => false],
+            ],
+            'footer' => ['text' => "Death ID: {$deathId}"],
+        ];
 
-        Http::attach(
-            'files[0]',
-            base64_decode($base64Image),
-            'inventory.png'
-        )->post($webhookUrl, [
-            'payload_json' => json_encode([
-                'embeds' => [[
-                    'title' => '🎒 Victim\'s Inventory',
-                    'color' => 0x5865F2,
-                    'image' => ['url' => 'attachment://inventory.png'],
-                ]]
-            ])
-        ]);
+        if ($inventoryImage) {
+            $embed['image'] = ['url' => 'attachment://inventory.png'];
+
+            Http::attach(
+                'files[0]',
+                base64_decode($inventoryImage),
+                'inventory.png'
+            )->post($this->deathsWebhookUrl, [
+                'payload_json' => json_encode(['embeds' => [$embed]])
+            ]);
+        } else {
+            Http::post($this->deathsWebhookUrl, ['embeds' => [$embed]]);
+        }
     }
 }

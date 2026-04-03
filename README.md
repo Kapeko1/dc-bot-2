@@ -1,58 +1,190 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Albion Online Discord Kill/Death Tracker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel-based bot that tracks Albion Online player kills and deaths and sends notifications to Discord via webhooks.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Track multiple Albion Online players
+- Send kill notifications to dedicated Discord channel
+- Send death notifications to dedicated Discord channel
+- Rich Discord embeds with kill/death details
+- Automatic inventory/equipment image generation
+- Runs every minute via Laravel scheduler
+- Prevents duplicate notifications
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- SQLite (or MySQL/PostgreSQL)
+- GD extension for PHP (for image generation)
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+1. Clone the repository and install dependencies:
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
 
-## Contributing
+3. Generate application key:
+```bash
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. Configure Discord webhooks in `.env`:
+```env
+DISCORD_WEBHOOK_KILLS=https://discord.com/api/webhooks/YOUR_KILLS_WEBHOOK_URL
+DISCORD_WEBHOOK_DEATHS=https://discord.com/api/webhooks/YOUR_DEATHS_WEBHOOK_URL
+```
 
-## Code of Conduct
+To get webhook URLs:
+- Go to your Discord server
+- Right-click on a channel → Edit Channel
+- Integrations → Webhooks → New Webhook
+- Copy the webhook URL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Run migrations:
+```bash
+php artisan migrate
+```
 
-## Security Vulnerabilities
+6. (Optional) Copy Arial Bold font to `resources/fonts/ARIALBD.TTF`:
+   - Windows: Copy from `C:\Windows\Fonts\arialbd.ttf`
+   - macOS: Copy from `/System/Library/Fonts/Supplemental/Arial Bold.ttf`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Usage
+
+### Adding Players to Track
+
+Use Laravel Tinker to add players:
+
+```bash
+php artisan tinker
+```
+
+Then:
+
+```php
+// Add a player
+App\Models\Player::create([
+    'albion_id' => 'PLAYER_ID_HERE',
+    'name' => 'PlayerName',
+    'active' => true
+]);
+
+// List all tracked players
+App\Models\Player::all();
+
+// Deactivate a player (stop tracking)
+$player = App\Models\Player::where('albion_id', 'PLAYER_ID_HERE')->first();
+$player->update(['active' => false]);
+```
+
+**How to find a player ID:**
+1. Go to https://albiononline.com/killboard
+2. Search for the player
+3. The player ID is in the URL: `https://albiononline.com/killboard/player/PLAYER_ID_HERE`
+
+### Initialize Player History
+
+**IMPORTANT**: After adding players, you must initialize their history to avoid spamming old kills/deaths:
+
+```bash
+php artisan albion:initialize-history
+```
+
+This marks all existing kills and deaths as "already processed" without sending notifications. Only run this when:
+- Adding new players
+- After clearing the database
+- First time setup
+
+### Running the Tracker
+
+#### Manual Run (for testing):
+```bash
+php artisan albion:track-kills
+```
+
+#### Production (with scheduler):
+
+The tracker runs automatically every minute via Laravel's scheduler.
+
+Add this to your crontab:
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Or use a process manager like Supervisor to run:
+```bash
+php artisan schedule:work
+```
+
+## Discord Notification Format
+
+### Kill Notifications
+- **Title**: ⚔️ New Kill Alert!
+- **Fields**: Killer, Victim, Location
+- **Link**: Direct link to killboard
+- **Image**: Victim's inventory/equipment
+
+### Death Notifications
+- **Title**: 💀 Player Death Alert!
+- **Fields**: Victim, Killer, Location
+- **Link**: Direct link to killboard
+- **Image**: Lost inventory/equipment
+
+## Project Structure
+
+```
+app/
+├── Console/Commands/
+│   └── TrackKills.php          # Main tracking command
+├── Models/
+│   ├── Player.php              # Tracked players
+│   ├── ProcessedKill.php       # Processed kills (prevent duplicates)
+│   └── ProcessedDeath.php      # Processed deaths (prevent duplicates)
+└── Services/
+    ├── AlbionApiService.php    # Albion Online API client
+    ├── DiscordWebhookService.php # Discord webhook sender
+    └── InventoryImageService.php # Inventory image generator
+```
+
+## Troubleshooting
+
+### No notifications appearing
+
+1. Check webhook URLs are correct in `.env`
+2. Test webhook manually:
+```bash
+curl -X POST "YOUR_WEBHOOK_URL" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Test message"}'
+```
+
+### Images not generating
+
+1. Verify GD extension is installed:
+```bash
+php -m | grep gd
+```
+
+2. Check font file exists at `resources/fonts/ARIALBD.TTF`
+
+### Scheduler not running
+
+1. Verify cron is configured correctly
+2. Check Laravel logs: `storage/logs/laravel.log`
+3. Test manually: `php artisan schedule:run`
+
+## API Rate Limits
+
+The Albion Online API has no official rate limits, but be respectful. The default 1-minute interval is reasonable for most use cases.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT License

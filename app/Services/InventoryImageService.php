@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ItemIconCache;
 use Illuminate\Support\Facades\Http;
 
 class InventoryImageService
@@ -40,8 +41,7 @@ class InventoryImageService
             $x = $col * ($this->iconSize + $this->padding);
             $y = $row * ($this->iconSize + $this->padding);
 
-            $iconUrl = "https://render.albiononline.com/v1/item/{$item['Type']}.png?size=64";
-            $iconData = Http::get($iconUrl)->body();
+            $iconData = $this->getIconData($item['Type']);
 
             if ($iconData) {
                 $icon = imagecreatefromstring($iconData);
@@ -85,5 +85,40 @@ class InventoryImageService
         imagedestroy($canvas);
 
         return base64_encode($imageData);
+    }
+
+    private function getIconData(string $itemType): ?string
+    {
+        // Check cache first
+        $cached = ItemIconCache::where('item_type', $itemType)->first();
+        if ($cached) {
+            return base64_decode($cached->image_data);
+        }
+
+        // Fetch from API
+        $iconUrl = "https://render.albiononline.com/v1/item/{$itemType}.png?size=64";
+
+        try {
+            $response = Http::timeout(5)->retry(2, 100)->get($iconUrl);
+
+            if ($response->successful()) {
+                $iconData = $response->body();
+
+                if ($iconData) {
+                    // Cache it
+                    ItemIconCache::create([
+                        'item_type' => $itemType,
+                        'image_data' => base64_encode($iconData),
+                    ]);
+
+                    return $iconData;
+                }
+            }
+        } catch (\Exception $e) {
+            // Failed to fetch - return null
+            return null;
+        }
+
+        return null;
     }
 }

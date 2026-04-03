@@ -64,8 +64,8 @@ class TrackKills extends Command
                 continue;
             }
 
-            $this->discord->sendKillAlert($kill);
-            $this->sendInventoryIfPresent($kill, 'kill');
+            $inventoryImage = $this->getInventoryImage($kill);
+            $this->discord->sendKillAlert($kill, $inventoryImage);
 
             ProcessedKill::create([
                 'event_id' => $eventId,
@@ -92,8 +92,8 @@ class TrackKills extends Command
                 continue;
             }
 
-            $this->discord->sendDeathAlert($death);
-            $this->sendInventoryIfPresent($death, 'death');
+            $inventoryImage = $this->getInventoryImage($death);
+            $this->discord->sendDeathAlert($death, $inventoryImage);
 
             ProcessedDeath::create([
                 'event_id' => $eventId,
@@ -108,17 +108,16 @@ class TrackKills extends Command
         }
     }
 
-    private function sendInventoryIfPresent(array $event, string $type): void
+    private function getInventoryImage(array $event): ?string
     {
         $equipment = $event['Victim']['Equipment'] ?? [];
         $inventory = $event['Victim']['Inventory'] ?? [];
         $full = array_merge($equipment, array_filter($inventory));
 
-        if (!empty($full)) {
-            $image = $this->imageService->generate($full);
-            if ($image) {
-                $this->discord->sendInventoryImage($image, $type);
-            }
+        if (empty($full)) {
+            return null;
         }
+
+        return $this->imageService->generate($full);
     }
 }
