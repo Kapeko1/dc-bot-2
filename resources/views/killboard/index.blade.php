@@ -180,7 +180,7 @@
                                 <div class="relative">
                                     <div class="absolute -left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#10B981] to-transparent"></div>
                                     <h3 class="font-[Cinzel] text-base font-bold text-[#10B981] mb-4 tracking-wide uppercase border-b border-[#10B981]/30 pb-2">
-                                        {{ $event->killer_name ?? 'Killer' }}'s Arsenal
+                                        {{ $event->killer_name ?? 'Killer' }}'s Inv
                                     </h3>
                                     <x-equipment-grid
                                         :equipment="$event->event_data['Killer']['Equipment'] ?? []"
@@ -193,7 +193,7 @@
                                 <div class="relative">
                                     <div class="absolute -left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#DC143C] to-transparent"></div>
                                     <h3 class="font-[Cinzel] text-base font-bold text-[#DC143C] mb-4 tracking-wide uppercase border-b border-[#DC143C]/30 pb-2">
-                                        {{ $event->victim_name ?? 'Victim' }}'s Arsenal
+                                        {{ $event->victim_name ?? 'Victim' }}'s Inv
                                     </h3>
                                     <x-equipment-grid
                                         :equipment="$event->event_data['Victim']['Equipment'] ?? []"
