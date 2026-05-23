@@ -44,7 +44,7 @@
                             <!-- Title with dramatic styling -->
                             <div class="flex flex-col">
                                 <span class="font-[Cinzel] text-lg sm:text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#DC143C] via-[#EF4444] to-[#D4AF37] drop-shadow-[0_0_10px_rgba(220,20,60,0.5)] transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(220,20,60,0.8)]">
-                                    DC KILLBOARD
+                                    KILLBOARD
                                 </span>
                             </div>
                         </a>

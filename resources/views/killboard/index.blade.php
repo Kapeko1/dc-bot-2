@@ -7,11 +7,6 @@
     <!-- Header with dramatic styling -->
     <div class="relative">
         <div class="absolute -left-2 sm:-left-4 top-0 bottom-0 w-0.5 sm:w-1 bg-gradient-to-b from-[#DC143C] via-[#D4AF37] to-transparent transform -skew-y-12"></div>
-        <div class="pl-4 sm:pl-6">
-            <h1 class="font-[Cinzel] text-3xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#DC143C] via-[#EF4444] to-[#D4AF37] tracking-wide slash-accent animate-on-scroll">
-                KILL LOG
-            </h1>
-        </div>
     </div>
 
     <!-- Filters with refined brutalist design -->
@@ -90,133 +85,133 @@
     <!-- Events List - Battle Records -->
     <div class="space-y-4">
         @forelse($events as $event)
-            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/90 via-[#1A0A0A]/90 to-[#2D2D2D]/90 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
+            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/98 via-[#1A0A0A]/98 to-[#2D2D2D]/98 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
                 <!-- Dramatic diagonal accent -->
                 <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-{{ $event->event_type === 'kill' ? '[#10B981]' : '[#DC143C]' }}/10 to-transparent transform skew-x-12 group-hover:w-48 transition-all duration-500"></div>
 
                 <div class="relative z-10 p-3 sm:p-5">
-                    <div class="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-6">
-                        <!-- Main Info -->
-                        <div class="flex-1 min-w-0 w-full">
-                            <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-                                @if($event->event_type === 'kill')
-                                    <div class="relative">
-                                        <div class="absolute inset-0 bg-[#10B981] blur-md opacity-50"></div>
-                                        <span class="relative inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-[#10B981] text-[#E8DCC8] font-[Space_Grotesk] text-[0.65rem] sm:text-xs font-bold tracking-wide sm:tracking-widest uppercase border border-[#10B981]">
-                                            ⚔ KILL
-                                        </span>
-                                    </div>
-                                @else
-                                    <div class="relative">
-                                        <div class="absolute inset-0 bg-[#DC143C] blur-md opacity-50"></div>
-                                        <span class="relative inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-[#DC143C] text-[#E8DCC8] font-[Space_Grotesk] text-[0.65rem] sm:text-xs font-bold tracking-wide sm:tracking-widest uppercase border border-[#DC143C]">
-                                            ☠ DEATH
-                                        </span>
-                                    </div>
-                                @endif
-                                <span class="font-[JetBrains_Mono] text-[0.65rem] sm:text-xs text-[#E8DCC8]/50 tracking-wide">
-                                    {{ $event->killed_at?->diffForHumans() ?? 'Unknown time' }}
-                                </span>
-                            </div>
-
-                            <div class="space-y-2 sm:space-y-3">
-                                <!-- Killer -->
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#D4AF37] uppercase tracking-wide sm:tracking-widest min-w-[50px] sm:min-w-[60px]">Killer:</span>
-                                    @if($event->killer_weapon)
-                                        <div class="flex-shrink-0">
-                                            <x-item-icon :item="$event->killer_weapon" size="lg" />
-                                        </div>
-                                    @endif
-                                    <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                        <span class="font-[Space_Grotesk] text-[#E8DCC8] font-semibold text-sm sm:text-base">{{ $event->killer_name ?? 'Unknown' }}</span>
-                                        @if($event->killer_guild)
-                                            <span class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/50 border border-[#4A4A4A] px-1.5 sm:px-2 py-0.5 bg-[#0A0A0A]/50">[{{ $event->killer_guild }}]</span>
-                                        @endif
-                                    </div>
+                    <!-- Header Row with Badge, Time, and Fame -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
+                        <div class="flex items-center gap-2 sm:gap-4">
+                            @if($event->event_type === 'kill')
+                                <div class="relative">
+                                    <div class="absolute inset-0 bg-[#10B981] blur-md opacity-50"></div>
+                                    <span class="relative inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-[#10B981] text-[#E8DCC8] font-[Space_Grotesk] text-[0.65rem] sm:text-xs font-bold tracking-wide sm:tracking-widest uppercase border border-[#10B981]">
+                                        ⚔ KILL
+                                    </span>
                                 </div>
-
-                                <!-- VS Divider -->
-                                <div class="flex items-center gap-2 sm:gap-3 pl-[50px] sm:pl-[60px]">
-                                    <div class="h-px flex-1 bg-gradient-to-r from-[#DC143C] via-[#4A4A4A] to-transparent"></div>
-                                    <span class="font-[Cinzel] text-[0.65rem] sm:text-xs text-[#DC143C] font-bold">VS</span>
-                                    <div class="h-px flex-1 bg-gradient-to-l from-[#DC143C] via-[#4A4A4A] to-transparent"></div>
+                            @else
+                                <div class="relative">
+                                    <div class="absolute inset-0 bg-[#DC143C] blur-md opacity-50"></div>
+                                    <span class="relative inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 bg-[#DC143C] text-[#E8DCC8] font-[Space_Grotesk] text-[0.65rem] sm:text-xs font-bold tracking-wide sm:tracking-widest uppercase border border-[#DC143C]">
+                                        ☠ DEATH
+                                    </span>
                                 </div>
-
-                                <!-- Victim -->
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#DC143C]/80 uppercase tracking-wide sm:tracking-widest min-w-[50px] sm:min-w-[60px]">Victim:</span>
-                                    @if($event->victim_weapon)
-                                        <div class="flex-shrink-0">
-                                            <x-item-icon :item="$event->victim_weapon" size="lg" />
-                                        </div>
-                                    @endif
-                                    <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                        <span class="font-[Space_Grotesk] text-[#E8DCC8]/90 font-medium text-sm sm:text-base">{{ $event->victim_name ?? 'Unknown' }}</span>
-                                        @if($event->victim_guild)
-                                            <span class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/50 border border-[#4A4A4A] px-1.5 sm:px-2 py-0.5 bg-[#0A0A0A]/50">[{{ $event->victim_guild }}]</span>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <!-- Battle Info -->
-                                <div class="flex flex-wrap items-center gap-3 sm:gap-6 font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/40 mt-2 sm:mt-3 pl-[50px] sm:pl-[60px]">
-                                    <span class="tracking-wider">IP: {{ $event->killer_ip }} ⚔ {{ $event->victim_ip }}</span>
-                                    @if($event->participants_count > 1)
-                                        <span class="tracking-wider">PLAYERS: {{ $event->participants_count }}</span>
-                                    @endif
-                                </div>
-                            </div>
+                            @endif
+                            <span class="font-[JetBrains_Mono] text-[0.65rem] sm:text-xs text-[#E8DCC8]/50 tracking-wide">
+                                {{ $event->killed_at?->diffForHumans() ?? 'Unknown time' }}
+                            </span>
                         </div>
 
-                        <!-- Fame Badge - Tiered Effects -->
                         @php
                             $fame = $event->total_fame;
-                            // Tier 1: < 100k (Standard gold)
-                            // Tier 2: 100k - 300k (Animated gold with glow)
-                            // Tier 3: 300k+ (Epic multi-color with intense effects)
                             $isTier3 = $fame >= 300000;
                             $isTier2 = $fame >= 100000 && $fame < 300000;
                             $isTier1 = $fame < 100000;
                         @endphp
-                        <div class="flex flex-col items-end ml-2 sm:ml-6 flex-shrink-0">
+                        <!-- Fame Badge - Compact -->
+                        <div class="flex flex-col items-end flex-shrink-0">
                             <div class="relative">
                                 @if($isTier3)
-                                    <!-- Tier 3: Epic 300k+ - Intense multi-glow -->
-                                    <div class="absolute inset-0 bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] blur-xl opacity-70 animate-pulse"></div>
-                                    <div class="absolute -inset-2 bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] blur-2xl opacity-40 animate-pulse" style="animation-delay: 150ms;"></div>
-                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 sm:border-4 border-[#D4AF37] p-2 sm:p-4 transform -rotate-3 shadow-2xl shadow-[#D4AF37]/50">
-                                        <div class="transform rotate-3">
-                                            <div class="font-[Cinzel] text-lg sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] leading-none animate-pulse">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] blur-xl opacity-60 animate-pulse"></div>
+                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 sm:border-3 border-[#D4AF37] px-4 sm:px-6 py-3 sm:py-4 transform -rotate-3 shadow-xl">
+                                        <div class="transform rotate-3 text-center">
+                                            <div class="font-[Cinzel] text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] leading-none animate-pulse">
                                                 {{ number_format($event->total_fame) }}
                                             </div>
-                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center">Fame</div>
+                                            <div class="font-[Space_Grotesk] text-[0.6rem] sm:text-[0.7rem] text-[#D4AF37] uppercase tracking-wider mt-1">Fame</div>
                                         </div>
                                     </div>
                                 @elseif($isTier2)
-                                    <!-- Tier 2: 100k-300k - Animated gold glow -->
-                                    <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#8B7500] blur-lg opacity-50 animate-pulse"></div>
-                                    <div class="absolute -inset-1 bg-gradient-to-br from-[#D4AF37] to-[#FF6B35] blur-md opacity-30"></div>
-                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 border-[#D4AF37] sm:border-4 sm:border-double p-2 sm:p-4 transform -rotate-3 shadow-xl shadow-[#D4AF37]/30">
-                                        <div class="transform rotate-3">
-                                            <div class="font-[Cinzel] text-lg sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FFD700] via-[#D4AF37] to-[#FF6B35] leading-none">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#8B7500] blur-xl opacity-50 animate-pulse"></div>
+                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 sm:border-3 border-[#D4AF37] px-4 sm:px-6 py-3 sm:py-4 transform -rotate-3 shadow-xl">
+                                        <div class="transform rotate-3 text-center">
+                                            <div class="font-[Cinzel] text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FFD700] via-[#D4AF37] to-[#FF6B35] leading-none">
                                                 {{ number_format($event->total_fame) }}
                                             </div>
-                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center">Fame</div>
+                                            <div class="font-[Space_Grotesk] text-[0.6rem] sm:text-[0.7rem] text-[#D4AF37] uppercase tracking-wider mt-1">Fame</div>
                                         </div>
                                     </div>
                                 @else
-                                    <!-- Tier 1: < 100k - Standard -->
-                                    <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#8B7500] blur-md sm:blur-lg opacity-30"></div>
-                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border border-[#D4AF37] sm:border-2 p-2 sm:p-4 transform -rotate-3">
-                                        <div class="transform rotate-3">
-                                            <div class="font-[Cinzel] text-lg sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#D4AF37] via-[#F4EFE3] to-[#8B7500] leading-none">
+                                    <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#8B7500] blur-lg opacity-30"></div>
+                                    <div class="relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 border-[#D4AF37] px-4 sm:px-6 py-3 sm:py-4 transform -rotate-3">
+                                        <div class="transform rotate-3 text-center">
+                                            <div class="font-[Cinzel] text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#D4AF37] via-[#F4EFE3] to-[#8B7500] leading-none">
                                                 {{ number_format($event->total_fame) }}
                                             </div>
-                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center">Fame</div>
+                                            <div class="font-[Space_Grotesk] text-[0.6rem] sm:text-[0.7rem] text-[#D4AF37] uppercase tracking-wider mt-1">Fame</div>
                                         </div>
                                     </div>
                                 @endif
+                            </div>
+                            @if($event->participants_count > 1)
+                                <div class="mt-2 text-center">
+                                    <span class="font-[JetBrains_Mono] text-[0.55rem] sm:text-xs text-[#E8DCC8]/40 tracking-wider">{{ $event->participants_count }} PLAYERS</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Player Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-start">
+                        <!-- Killer Column -->
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#10B981] uppercase tracking-wide sm:tracking-widest">Killer:</span>
+                            </div>
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                @if($event->killer_weapon)
+                                    <div class="flex-shrink-0">
+                                        <x-item-icon :item="$event->killer_weapon" size="lg" />
+                                    </div>
+                                @endif
+                                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                    <span class="font-[Space_Grotesk] text-[#E8DCC8] font-semibold text-sm sm:text-base">{{ $event->killer_name ?? 'Unknown' }}</span>
+                                    @if($event->killer_guild)
+                                        <span class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/50 border border-[#4A4A4A] px-1.5 sm:px-2 py-0.5 bg-[#0A0A0A]/50">[{{ $event->killer_guild }}]</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/40">
+                                <span class="tracking-wider">IP: {{ $event->killer_ip }}</span>
+                            </div>
+                        </div>
+
+                        <!-- VS Divider -->
+                        <div class="hidden lg:flex items-center justify-center px-4">
+                            <span class="font-[Cinzel] text-sm text-[#DC143C] font-bold bg-[#1A0A0A] px-3 py-1 border border-[#DC143C]/30">VS</span>
+                        </div>
+
+                        <!-- Victim Column -->
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#DC143C] uppercase tracking-wide sm:tracking-widest">Victim:</span>
+                            </div>
+                            <div class="flex items-center gap-2 sm:gap-3">
+                                @if($event->victim_weapon)
+                                    <div class="flex-shrink-0">
+                                        <x-item-icon :item="$event->victim_weapon" size="lg" />
+                                    </div>
+                                @endif
+                                <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                    <span class="font-[Space_Grotesk] text-[#E8DCC8]/90 font-medium text-sm sm:text-base">{{ $event->victim_name ?? 'Unknown' }}</span>
+                                    @if($event->victim_guild)
+                                        <span class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/50 border border-[#4A4A4A] px-1.5 sm:px-2 py-0.5 bg-[#0A0A0A]/50">[{{ $event->victim_guild }}]</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="font-[JetBrains_Mono] text-[0.6rem] sm:text-xs text-[#E8DCC8]/40">
+                                <span class="tracking-wider">IP: {{ $event->victim_ip }}</span>
                             </div>
                         </div>
                     </div>
@@ -228,8 +223,7 @@
                         <div class="bg-gradient-to-b from-[#0A0A0A]/90 to-[#1A0A0A]/90 p-3 sm:p-6">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                                 <!-- Killer Equipment -->
-                                <div class="relative">
-                                    <div class="absolute -left-1.5 sm:-left-2 top-0 bottom-0 w-0.5 sm:w-1 bg-gradient-to-b from-[#10B981] to-transparent"></div>
+                                <div>
                                     <h3 class="font-[Cinzel] text-sm sm:text-base font-bold text-[#10B981] mb-3 sm:mb-4 tracking-wide uppercase border-b border-[#10B981]/30 pb-1.5 sm:pb-2">
                                         {{ $event->killer_name ?? 'Killer' }}'s Inv
                                     </h3>
@@ -241,8 +235,7 @@
                                 </div>
 
                                 <!-- Victim Equipment -->
-                                <div class="relative">
-                                    <div class="absolute -left-1.5 sm:-left-2 top-0 bottom-0 w-0.5 sm:w-1 bg-gradient-to-b from-[#DC143C] to-transparent"></div>
+                                <div>
                                     <h3 class="font-[Cinzel] text-sm sm:text-base font-bold text-[#DC143C] mb-3 sm:mb-4 tracking-wide uppercase border-b border-[#DC143C]/30 pb-1.5 sm:pb-2">
                                         {{ $event->victim_name ?? 'Victim' }}'s Inv
                                     </h3>
