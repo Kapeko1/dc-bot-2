@@ -31,17 +31,24 @@
     $inventoryItems = collect($inventory ?? [])->filter($isValidItem);
 @endphp
 
-<div class="space-y-3">
+<div class="space-y-4">
     @if($equippedItems->count() > 0)
         <div>
-            <h4 class="text-xs font-semibold text-gray-400 mb-2 uppercase">{{ $title }}</h4>
-            <div class="flex flex-wrap gap-2">
+            <h4 class="font-[Space_Grotesk] text-xs font-bold text-[#E8DCC8]/70 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <div class="w-1 h-3 bg-gradient-to-b from-[#D4AF37] to-transparent"></div>
+                {{ $title }}
+            </h4>
+            <div class="flex flex-wrap gap-2.5">
                 @foreach($equippedItems as $slot => $item)
-                    <div class="group relative">
-                        <x-item-icon :item="$item['Type']" size="lg" />
-                        @if(isset($item['Count']) && $item['Count'] > 1)
-                            <span class="absolute bottom-0 right-0 bg-gray-900 text-white text-xs px-1 rounded">{{ $item['Count'] }}</span>
-                        @endif
+                    <div class="relative">
+                        <div class="relative bg-[#0A0A0A] border border-[#4A4A4A] hover:border-[#D4AF37] transition-all duration-300 p-1">
+                            <x-item-icon :item="$item['Type']" size="lg" />
+                            @if(isset($item['Count']) && $item['Count'] > 1)
+                                <span class="absolute -bottom-0.5 -right-0.5 bg-[#0A0A0A] text-[#E8DCC8] font-[JetBrains_Mono] text-[0.6rem] font-semibold px-1 py-0.5 border border-[#4A4A4A]">
+                                    {{ $item['Count'] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -50,19 +57,29 @@
 
     @if($inventoryItems->count() > 0)
         <div>
-            <h4 class="text-xs font-semibold text-gray-400 mb-2 uppercase">Inventory ({{ $inventoryItems->count() }} items)</h4>
+            <h4 class="font-[Space_Grotesk] text-xs font-bold text-[#E8DCC8]/70 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <div class="w-1 h-3 bg-gradient-to-b from-[#D4AF37] to-transparent"></div>
+                Inventory
+                <span class="font-[JetBrains_Mono] text-[0.65rem] text-[#D4AF37] ml-1">({{ $inventoryItems->count() }})</span>
+            </h4>
             <div class="flex flex-wrap gap-2">
                 @foreach($inventoryItems->take(24) as $item)
-                    <div class="group relative">
-                        <x-item-icon :item="$item['Type']" size="lg" />
-                        @if(isset($item['Count']) && $item['Count'] > 1)
-                            <span class="absolute bottom-0 right-0 bg-gray-900 text-white text-xs px-1 rounded">{{ $item['Count'] }}</span>
-                        @endif
+                    <div class="relative">
+                        <div class="relative bg-[#0A0A0A] border border-[#4A4A4A]/50 hover:border-[#D4AF37] transition-all duration-300 p-1">
+                            <x-item-icon :item="$item['Type']" size="lg" />
+                            @if(isset($item['Count']) && $item['Count'] > 1)
+                                <span class="absolute -bottom-0.5 -right-0.5 bg-[#0A0A0A] text-[#E8DCC8] font-[JetBrains_Mono] text-[0.6rem] font-semibold px-1 py-0.5 border border-[#4A4A4A]">
+                                    {{ $item['Count'] }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
                 @if($inventoryItems->count() > 24)
-                    <div class="flex items-center justify-center text-gray-600 text-xs px-2">
-                        +{{ $inventoryItems->count() - 24 }} more
+                    <div class="flex items-center justify-center px-3 py-2 bg-[#2D2D2D]/50 border border-[#4A4A4A]">
+                        <span class="font-[JetBrains_Mono] text-xs text-[#E8DCC8]/50">
+                            +{{ $inventoryItems->count() - 24 }}
+                        </span>
                     </div>
                 @endif
             </div>
@@ -70,6 +87,8 @@
     @endif
 
     @if($equippedItems->count() === 0 && $inventoryItems->count() === 0)
-        <p class="text-xs text-gray-600">No items</p>
+        <div class="py-8 text-center">
+            <p class="font-[Space_Grotesk] text-xs text-[#E8DCC8]/30 uppercase tracking-wider">No equipment found</p>
+        </div>
     @endif
 </div>

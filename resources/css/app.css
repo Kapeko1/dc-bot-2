@@ -6,6 +6,142 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Typography */
+    --font-display: 'Cinzel', 'Playfair Display', serif;
+    --font-sans: 'Space Grotesk', 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Darker Color Palette */
+    --color-blood: #6B0000;
+    --color-blood-bright: #A01020;
+    --color-blood-dark: #3C0000;
+    --color-iron: #1A1A1A;
+    --color-steel: #2D2D2D;
+    --color-bone: #B8AC98;
+    --color-parchment: #C4BFB3;
+    --color-gold: #A48827;
+    --color-gold-dark: #6B5500;
+    --color-shadow: #000000;
+
+    /* Custom colors extending Tailwind */
+    --color-blood-50: #FECACA;
+    --color-blood-100: #FCA5A5;
+    --color-blood-200: #F87171;
+    --color-blood-300: #EF4444;
+    --color-blood-400: #DC143C;
+    --color-blood-500: #A01020;
+    --color-blood-600: #6B0000;
+    --color-blood-700: #3C0000;
+    --color-blood-800: #2D0000;
+    --color-blood-900: #1A0000;
+    --color-blood-950: #0A0000;
+}
+
+/* Custom animations */
+@keyframes slash-in {
+    from {
+        opacity: 0;
+        transform: translateX(-100px) translateY(50px) rotate(-5deg);
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(0) rotate(0deg);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes blood-drip {
+    0%, 100% {
+        transform: scaleY(1);
+        transform-origin: top;
+    }
+    50% {
+        transform: scaleY(1.2);
+        transform-origin: top;
+    }
+}
+
+@keyframes forge-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(220, 20, 60, 0.3), 0 0 40px rgba(212, 175, 55, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(220, 20, 60, 0.5), 0 0 60px rgba(212, 175, 55, 0.4);
+    }
+}
+
+@keyframes diagonal-slash {
+    from {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    }
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+/* Base styles */
+body {
+    background: linear-gradient(135deg, #000000 0%, #0A0000 50%, #000000 100%);
+    background-attachment: fixed;
+}
+
+/* Noise texture overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Scroll-based animations */
+.animate-on-scroll {
+    opacity: 0;
+    animation: slash-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Diagonal slash accent */
+.slash-accent {
+    position: relative;
+}
+
+.slash-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #DC143C 0%, #D4AF37 100%);
+    transform: skewX(-15deg);
+    box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+}
+
+/* Combat texture */
+.combat-texture {
+    background-image:
+        linear-gradient(45deg, transparent 48%, rgba(220, 20, 60, 0.05) 49%, rgba(220, 20, 60, 0.05) 51%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(212, 175, 55, 0.03) 49%, rgba(212, 175, 55, 0.03) 51%, transparent 52%);
+    background-size: 20px 20px;
+}
+
+/* Metallic gradient */
+.metal-gradient {
+    background: linear-gradient(135deg,
+        #2D2D2D 0%,
+        #4A4A4A 25%,
+        #3A3A3A 50%,
+        #4A4A4A 75%,
+        #2D2D2D 100%);
 }
