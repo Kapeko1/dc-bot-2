@@ -26,28 +26,28 @@
         <!-- Navigation -->
         <nav class="relative z-10 border-b-2 border-[#DC143C]/30 metal-gradient">
             <div class="absolute inset-0 bg-gradient-to-r from-[#2D2D2D]/95 via-[#1A0A0A]/95 to-[#2D2D2D]/95 backdrop-blur-sm"></div>
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-                <div class="flex h-20 items-center justify-between">
-                    <div class="flex items-center gap-12">
-                        <a href="{{ route('killboard.index') }}" class="flex items-center gap-4 group">
+            <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 relative">
+                <div class="flex h-16 sm:h-20 items-center justify-between">
+                    <div class="flex items-center gap-3 sm:gap-12">
+                        <a href="{{ route('killboard.index') }}" class="flex items-center gap-2 sm:gap-4 group">
                             <!-- Heraldic emblem -->
-                            <div class="w-12 h-12 relative">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 relative flex-shrink-0">
                                 <div class="absolute inset-0 bg-gradient-to-br from-[#DC143C] to-[#8B0000] transform -rotate-45 border-2 border-[#D4AF37] shadow-lg shadow-[#DC143C]/50"></div>
                                 <div class="absolute inset-2 bg-[#0A0A0A] transform -rotate-45 flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-[#DC143C] transform rotate-45" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-[#DC143C] transform rotate-45" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z"/>
                                     </svg>
                                 </div>
                             </div>
                             <!-- Title with dramatic styling -->
                             <div class="flex flex-col">
-                                <span class="font-[Cinzel] text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#DC143C] via-[#EF4444] to-[#D4AF37] drop-shadow-[0_0_10px_rgba(220,20,60,0.5)] transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(220,20,60,0.8)]">
+                                <span class="font-[Cinzel] text-lg sm:text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#DC143C] via-[#EF4444] to-[#D4AF37] drop-shadow-[0_0_10px_rgba(220,20,60,0.5)] transition-all duration-300 group-hover:drop-shadow-[0_0_20px_rgba(220,20,60,0.8)]">
                                     DC KILLBOARD
                                 </span>
                             </div>
                         </a>
 
-                        <div class="flex items-baseline gap-6">
+                        <div class="hidden sm:flex items-baseline gap-6">
                             <a href="{{ route('killboard.index') }}"
                                class="relative px-4 py-2 font-[Space_Grotesk] text-sm font-medium tracking-wide uppercase transition-all duration-300 {{ request()->routeIs('killboard.index') ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
                                 <span class="relative z-10">Kill Log</span>
@@ -60,9 +60,9 @@
                     </div>
 
                     <!-- Corner accent -->
-                    <div class="hidden lg:flex items-center gap-2 font-[JetBrains_Mono] text-xs text-[#D4AF37]/60 tracking-wider">
-                        <div class="w-2 h-2 bg-[#DC143C] animate-pulse"></div>
-                        LIVE
+                    <div class="flex items-center gap-2 font-[JetBrains_Mono] text-[0.65rem] sm:text-xs text-[#D4AF37]/60 tracking-wider">
+                        <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#DC143C] animate-pulse"></div>
+                        <span class="hidden sm:inline">LIVE</span>
                     </div>
                 </div>
             </div>
