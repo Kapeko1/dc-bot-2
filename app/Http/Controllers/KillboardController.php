@@ -50,7 +50,10 @@ class KillboardController extends Controller
         // Get all tracked players for filter dropdown
         $players = Player::where('active', true)->orderBy('name')->get();
 
-        return view('killboard.index', compact('events', 'players', 'playerFilter', 'sortBy'));
+        // Get daily statistics for the last 14 days
+        $dailyStats = $this->getDailyStats(14);
+
+        return view('killboard.index', compact('events', 'players', 'playerFilter', 'sortBy', 'dailyStats'));
     }
 
     public function player(string $albionId)
@@ -97,5 +100,44 @@ class KillboardController extends Controller
         ];
 
         return view('killboard.player', compact('player', 'kills', 'deaths', 'stats'));
+    }
+
+    private function getDailyStats(int $days = 30): array
+    {
+        $startDate = now()->subDays($days)->startOfDay();
+
+        // Get daily kill counts
+        $dailyKills = ProcessedKill::where('killed_at', '>=', $startDate)
+            ->select(DB::raw('DATE(killed_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('count', 'date')
+            ->toArray();
+
+        // Get daily death counts
+        $dailyDeaths = ProcessedDeath::where('killed_at', '>=', $startDate)
+            ->select(DB::raw('DATE(killed_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('count', 'date')
+            ->toArray();
+
+        // Build complete date range with zero values for missing dates
+        $dates = [];
+        $kills = [];
+        $deaths = [];
+
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $dates[] = $date;
+            $kills[] = $dailyKills[$date] ?? 0;
+            $deaths[] = $dailyDeaths[$date] ?? 0;
+        }
+
+        return [
+            'dates' => $dates,
+            'kills' => $kills,
+            'deaths' => $deaths,
+        ];
     }
 }

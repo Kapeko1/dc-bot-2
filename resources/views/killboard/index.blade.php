@@ -54,8 +54,24 @@
         </form>
     </div>
 
+    <!-- Daily Statistics Graph -->
+    <div class="relative metal-gradient border-2 border-[#4A4A4A] p-6 animate-on-scroll stagger-3 combat-texture overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#10B981]/10 to-transparent blur-2xl"></div>
+        <div class="relative z-10">
+            <h2 class="font-[Cinzel] text-xl font-bold text-[#E8DCC8] mb-6 tracking-wide flex items-center gap-3">
+                <svg class="w-6 h-6 text-[#D4AF37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Daily Activity (Last 14 Days)
+            </h2>
+            <div class="bg-[#0A0A0A]/80 border-2 border-[#2D2D2D] p-4">
+                <canvas id="dailyStatsChart" height="80"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Tracked Players with medieval badge design -->
-    <div class="relative bg-gradient-to-r from-[#2D2D2D]/50 via-[#1A0A0A]/50 to-[#2D2D2D]/50 border-l-4 border-[#D4AF37] p-6 animate-on-scroll stagger-3">
+    <div class="relative bg-gradient-to-r from-[#2D2D2D]/50 via-[#1A0A0A]/50 to-[#2D2D2D]/50 border-l-4 border-[#D4AF37] p-6 animate-on-scroll stagger-4">
         <h2 class="font-[Cinzel] text-sm font-bold text-[#D4AF37] mb-4 tracking-[0.3em] uppercase">Tracked Players</h2>
         <div class="flex flex-wrap gap-3">
             @foreach($players as $player)
@@ -264,5 +280,144 @@ function toggleDetails(elementId) {
         toggleText.textContent = 'Expand ▼';
     }
 }
+
+// Initialize daily stats chart
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('dailyStatsChart');
+    if (!ctx) return;
+
+    const dates = @json($dailyStats['dates']);
+    const kills = @json($dailyStats['kills']);
+    const deaths = @json($dailyStats['deaths']);
+
+    // Format dates for display (show day of month)
+    const labels = dates.map(date => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Kills',
+                    data: kills,
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#10B981',
+                    pointBorderColor: '#000',
+                    pointBorderWidth: 2,
+                },
+                {
+                    label: 'Deaths',
+                    data: deaths,
+                    borderColor: '#DC143C',
+                    backgroundColor: 'rgba(220, 20, 60, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#DC143C',
+                    pointBorderColor: '#000',
+                    pointBorderWidth: 2,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: '#B8AC98',
+                        font: {
+                            family: "'Space Grotesk', sans-serif",
+                            size: 12,
+                            weight: 600
+                        },
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#0A0A0A',
+                    titleColor: '#E8DCC8',
+                    bodyColor: '#B8AC98',
+                    borderColor: '#4A4A4A',
+                    borderWidth: 2,
+                    padding: 12,
+                    titleFont: {
+                        family: "'Cinzel', serif",
+                        size: 14,
+                        weight: 700
+                    },
+                    bodyFont: {
+                        family: "'Space Grotesk', sans-serif",
+                        size: 13
+                    },
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#B8AC98',
+                        font: {
+                            family: "'JetBrains Mono', monospace",
+                            size: 11
+                        },
+                        precision: 0
+                    },
+                    grid: {
+                        color: '#2D2D2D',
+                        drawBorder: false
+                    },
+                    border: {
+                        display: false
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#B8AC98',
+                        font: {
+                            family: "'JetBrains Mono', monospace",
+                            size: 10
+                        },
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: {
+                        color: '#2D2D2D',
+                        drawBorder: false
+                    },
+                    border: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+});
 </script>
 @endsection
