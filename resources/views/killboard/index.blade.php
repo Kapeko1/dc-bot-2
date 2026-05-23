@@ -34,7 +34,7 @@
                         id="sort"
                         class="w-full px-4 py-3 bg-[#0A0A0A]/80 border-2 border-[#4A4A4A] text-[#E8DCC8] font-[Space_Grotesk] focus:border-[#DC143C] focus:ring-2 focus:ring-[#DC143C]/50 transition-all duration-300">
                     <option value="recent" {{ $sortBy === 'recent' ? 'selected' : '' }}>Most Recent</option>
-                    <option value="fame" {{ $sortBy === 'fame' ? 'selected' : '' }}>Highest Glory</option>
+                    <option value="fame" {{ $sortBy === 'fame' ? 'selected' : '' }}>Highest Fame</option>
                 </select>
             </div>
 
