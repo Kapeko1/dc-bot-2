@@ -10,33 +10,33 @@
     <!-- Header with Heraldic Design -->
     <div class="relative">
         <a href="{{ route('killboard.index') }}"
-           class="inline-flex items-center gap-2 font-[Space_Grotesk] text-sm text-[#D4AF37] hover:text-[#E8DCC8] mb-6 transition-colors group">
-            <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           class="inline-flex items-center gap-2 font-[Space_Grotesk] text-xs sm:text-sm text-[#D4AF37] hover:text-[#E8DCC8] mb-4 sm:mb-6 transition-colors group">
+            <svg class="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             Return to Kill Log
         </a>
 
-        <div class="flex items-start gap-6">
+        <div class="flex items-start gap-3 sm:gap-6">
             <!-- Heraldic shield emblem -->
-            <div class="relative w-20 h-24 flex-shrink-0">
-                <div class="absolute inset-0 bg-gradient-to-br from-[#DC143C] to-[#8B0000] border-2 border-[#D4AF37]" style="clip-path: polygon(50% 0%, 100% 25%, 100% 85%, 50% 100%, 0% 85%, 0% 25%)"></div>
-                <div class="absolute inset-2 bg-[#0A0A0A] flex items-center justify-center" style="clip-path: polygon(50% 0%, 100% 25%, 100% 85%, 50% 100%, 0% 85%, 0% 25%)">
-                    <span class="font-[Cinzel] text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#D4AF37] to-[#DC143C]">
+            <div class="relative w-14 h-16 sm:w-20 sm:h-24 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#DC143C] to-[#8B0000] border border-[#D4AF37] sm:border-2" style="clip-path: polygon(50% 0%, 100% 25%, 100% 85%, 50% 100%, 0% 85%, 0% 25%)"></div>
+                <div class="absolute inset-1 sm:inset-2 bg-[#0A0A0A] flex items-center justify-center" style="clip-path: polygon(50% 0%, 100% 25%, 100% 85%, 50% 100%, 0% 85%, 0% 25%)">
+                    <span class="font-[Cinzel] text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#D4AF37] to-[#DC143C]">
                         {{ substr($player->name, 0, 1) }}
                     </span>
                 </div>
-                <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+                <div class="absolute -bottom-1 sm:-bottom-2 left-1/2 -translate-x-1/2 w-12 sm:w-16 h-0.5 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
             </div>
 
-            <div class="flex-1">
-                <div class="flex items-center gap-4 mb-2">
-                    <h1 class="font-[Cinzel] text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#E8DCC8] via-[#F4EFE3] to-[#D4AF37] tracking-wide">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 sm:gap-4 mb-1 sm:mb-2">
+                    <h1 class="font-[Cinzel] text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#E8DCC8] via-[#F4EFE3] to-[#D4AF37] tracking-wide truncate">
                         {{ $player->name }}
                     </h1>
-                    <div class="w-1 h-8 bg-gradient-to-b from-[#DC143C] to-transparent transform -skew-x-12"></div>
+                    <div class="w-0.5 sm:w-1 h-6 sm:h-8 bg-gradient-to-b from-[#DC143C] to-transparent transform -skew-x-12 hidden sm:block"></div>
                 </div>
-                <p class="font-[Space_Grotesk] text-sm text-[#D4AF37] uppercase tracking-[0.3em]">
+                <p class="font-[Space_Grotesk] text-xs sm:text-sm text-[#D4AF37] uppercase tracking-[0.2em] sm:tracking-[0.3em]">
                     Player Stats
                 </p>
             </div>
@@ -123,14 +123,14 @@
             </div>
         </div>
 
-        <!-- Highest Fame - Legendary Card -->
+        <!-- Highest Fame Card -->
         <div class="group relative bg-gradient-to-br from-[#2D2D2D] to-[#1A0A0A] border-2 border-[#D4AF37] p-6 overflow-hidden animate-on-scroll stagger-3">
             <div class="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/5 to-transparent"></div>
             <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#D4AF37]/30 to-transparent blur-2xl group-hover:w-40 group-hover:h-40 transition-all duration-500"></div>
             <div class="relative z-10">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
-                        <p class="font-[Space_Grotesk] text-xs font-semibold text-[#D4AF37] uppercase tracking-widest mb-3">Legendary</p>
+                        <p class="font-[Space_Grotesk] text-xs font-semibold text-[#D4AF37] uppercase tracking-widest mb-3">Highest Fame</p>
                         <p class="font-[Cinzel] text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#D4AF37] via-[#F4EFE3] to-[#D4AF37]">
                             {{ $stats['highest_fame_kill'] ? number_format($stats['highest_fame_kill']->total_fame) : '0' }}
                         </p>

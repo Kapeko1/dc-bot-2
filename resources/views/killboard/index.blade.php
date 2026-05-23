@@ -65,7 +65,9 @@
                 <span class="text-sm sm:text-xl">Daily Activity (Last 14 Days)</span>
             </h2>
             <div class="bg-[#0A0A0A]/80 border-2 border-[#2D2D2D] p-2 sm:p-4">
-                <canvas id="dailyStatsChart" class="w-full" height="120"></canvas>
+                <div class="h-40 sm:h-64">
+                    <canvas id="dailyStatsChart" class="w-full h-full"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -88,7 +90,7 @@
     <!-- Events List - Battle Records -->
     <div class="space-y-4">
         @forelse($events as $event)
-            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/80 via-[#1A0A0A]/80 to-[#2D2D2D]/80 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
+            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/90 via-[#1A0A0A]/90 to-[#2D2D2D]/90 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
                 <!-- Dramatic diagonal accent -->
                 <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-{{ $event->event_type === 'kill' ? '[#10B981]' : '[#DC143C]' }}/10 to-transparent transform skew-x-12 group-hover:w-48 transition-all duration-500"></div>
 
@@ -115,15 +117,12 @@
                                 <span class="font-[JetBrains_Mono] text-[0.65rem] sm:text-xs text-[#E8DCC8]/50 tracking-wide">
                                     {{ $event->killed_at?->diffForHumans() ?? 'Unknown time' }}
                                 </span>
-                                <span class="ml-auto font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#D4AF37]/70 uppercase tracking-wider details-toggle-text group-hover:text-[#D4AF37] transition-colors">
-                                    Expand ▼
-                                </span>
                             </div>
 
                             <div class="space-y-2 sm:space-y-3">
                                 <!-- Killer -->
                                 <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#D4AF37] uppercase tracking-wide sm:tracking-widest min-w-[50px] sm:min-w-[60px]">Victor:</span>
+                                    <span class="font-[Space_Grotesk] text-[0.65rem] sm:text-xs text-[#D4AF37] uppercase tracking-wide sm:tracking-widest min-w-[50px] sm:min-w-[60px]">Killer:</span>
                                     @if($event->killer_weapon)
                                         <div class="flex-shrink-0">
                                             <x-item-icon :item="$event->killer_weapon" size="lg" />
@@ -191,7 +190,7 @@
                                             <div class="font-[Cinzel] text-lg sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FF6B35] via-[#D4AF37] to-[#9333EA] leading-none animate-pulse">
                                                 {{ number_format($event->total_fame) }}
                                             </div>
-                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FF6B35] to-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center font-bold">LEGENDARY</div>
+                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center">Fame</div>
                                         </div>
                                     </div>
                                 @elseif($isTier2)
@@ -203,7 +202,7 @@
                                             <div class="font-[Cinzel] text-lg sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#FFD700] via-[#D4AF37] to-[#FF6B35] leading-none">
                                                 {{ number_format($event->total_fame) }}
                                             </div>
-                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center font-semibold">EPIC</div>
+                                            <div class="font-[Space_Grotesk] text-[0.55rem] sm:text-[0.65rem] text-[#D4AF37] uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1 text-center">Fame</div>
                                         </div>
                                     </div>
                                 @else
@@ -303,17 +302,13 @@
 <script>
 function toggleDetails(elementId) {
     const element = document.getElementById(elementId);
-    const button = event.currentTarget;
-    const toggleText = button.querySelector('.details-toggle-text');
 
     if (element.classList.contains('hidden')) {
         element.classList.remove('hidden');
-        toggleText.textContent = 'Collapse ▲';
         // Add reveal animation
         element.style.animation = 'diagonal-slash 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards';
     } else {
         element.classList.add('hidden');
-        toggleText.textContent = 'Expand ▼';
     }
 }
 
@@ -369,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
             interaction: {
                 intersect: false,
                 mode: 'index'

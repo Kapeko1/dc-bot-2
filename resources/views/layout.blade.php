@@ -15,8 +15,10 @@
 </head>
 <body class="h-full text-[#E8DCC8] antialiased">
     <div class="min-h-full relative">
-        <!-- Diagonal accent lines background -->
+        <!-- Background Image -->
         <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style="background-image: url('{{ asset('game_cover_21085.jpg.png') }}');"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/60 via-[#0A0A0A]/40 to-[#0A0A0A]/70"></div>
             <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#DC143C]/10 to-transparent blur-3xl"></div>
             <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D4AF37]/10 to-transparent blur-3xl"></div>
             <div class="absolute top-1/2 left-1/3 w-1 h-[200%] bg-gradient-to-b from-transparent via-[#DC143C]/20 to-transparent transform -rotate-12"></div>
