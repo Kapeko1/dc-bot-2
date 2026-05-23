@@ -70,6 +70,18 @@ class TrackKills extends Command
             ProcessedKill::create([
                 'event_id' => $eventId,
                 'albion_player_id' => $player->albion_id,
+                'event_data' => $kill,
+                'killer_name' => $kill['Killer']['Name'] ?? null,
+                'victim_name' => $kill['Victim']['Name'] ?? null,
+                'killer_guild' => $kill['Killer']['GuildName'] ?? null,
+                'victim_guild' => $kill['Victim']['GuildName'] ?? null,
+                'total_fame' => $kill['TotalVictimKillFame'] ?? 0,
+                'killer_weapon' => $kill['Killer']['Equipment']['MainHand']['Type'] ?? null,
+                'victim_weapon' => $kill['Victim']['Equipment']['MainHand']['Type'] ?? null,
+                'killed_at' => isset($kill['TimeStamp']) ? date('Y-m-d H:i:s', strtotime($kill['TimeStamp'])) : null,
+                'killer_ip' => $kill['Killer']['AverageItemPower'] ?? 0,
+                'victim_ip' => $kill['Victim']['AverageItemPower'] ?? 0,
+                'participants_count' => count($kill['Participants'] ?? []) + 1,
             ]);
 
             $newKills++;
@@ -98,6 +110,18 @@ class TrackKills extends Command
             ProcessedDeath::create([
                 'event_id' => $eventId,
                 'albion_player_id' => $player->albion_id,
+                'event_data' => $death,
+                'killer_name' => $death['Killer']['Name'] ?? null,
+                'victim_name' => $death['Victim']['Name'] ?? null,
+                'killer_guild' => $death['Killer']['GuildName'] ?? null,
+                'victim_guild' => $death['Victim']['GuildName'] ?? null,
+                'total_fame' => $death['TotalVictimKillFame'] ?? 0,
+                'killer_weapon' => $death['Killer']['Equipment']['MainHand']['Type'] ?? null,
+                'victim_weapon' => $death['Victim']['Equipment']['MainHand']['Type'] ?? null,
+                'killed_at' => isset($death['TimeStamp']) ? date('Y-m-d H:i:s', strtotime($death['TimeStamp'])) : null,
+                'killer_ip' => $death['Killer']['AverageItemPower'] ?? 0,
+                'victim_ip' => $death['Victim']['AverageItemPower'] ?? 0,
+                'participants_count' => count($death['Participants'] ?? []) + 1,
             ]);
 
             $newDeaths++;
