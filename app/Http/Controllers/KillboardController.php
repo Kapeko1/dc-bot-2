@@ -95,6 +95,11 @@ class KillboardController extends Controller
                 ->map->count()
                 ->sortDesc()
                 ->take(5),
+            'killer_weapon_breakdown' => $deaths->where('killer_weapon', '!=', null)
+                ->groupBy('killer_weapon')
+                ->map->count()
+                ->sortDesc()
+                ->take(5),
             'avg_kill_fame' => $kills->count() > 0 ? round($kills->avg('total_fame')) : 0,
             'avg_death_fame' => $deaths->count() > 0 ? round($deaths->avg('total_fame')) : 0,
         ];

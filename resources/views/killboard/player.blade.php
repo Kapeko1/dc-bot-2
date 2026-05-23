@@ -156,7 +156,7 @@
     </div>
 
     <!-- Weapon Arsenal Statistics -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Weapons Used (Kills) -->
         <div class="relative bg-gradient-to-br from-[#2D2D2D]/80 to-[#1A0A0A]/80 border-l-4 border-[#10B981] p-6 combat-texture animate-on-scroll stagger-4">
             <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#10B981]/10 to-transparent blur-2xl"></div>
@@ -193,7 +193,7 @@
             @endif
         </div>
 
-        <!-- Weapons Used (Deaths) -->
+        <!-- Weapons Used (Deaths - Player's Weapons) -->
         <div class="relative bg-gradient-to-br from-[#2D2D2D]/80 to-[#1A0A0A]/80 border-l-4 border-[#DC143C] p-6 combat-texture animate-on-scroll stagger-5">
             <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#DC143C]/10 to-transparent blur-2xl"></div>
             <h2 class="relative z-10 font-[Cinzel] text-xl font-bold text-[#DC143C] mb-6 tracking-wide flex items-center gap-3">
@@ -226,6 +226,42 @@
                 </div>
             @else
                 <p class="font-[Space_Grotesk] text-[#E8DCC8]/40 text-sm text-center py-8">No deaths recorded yet</p>
+            @endif
+        </div>
+
+        <!-- Weapons Killing Player (Enemy Weapons) -->
+        <div class="relative bg-gradient-to-br from-[#2D2D2D]/80 to-[#1A0A0A]/80 border-l-4 border-[#8B0000] p-6 combat-texture animate-on-scroll stagger-6">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#8B0000]/10 to-transparent blur-2xl"></div>
+            <h2 class="relative z-10 font-[Cinzel] text-xl font-bold text-[#EF4444] mb-6 tracking-wide flex items-center gap-3">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z"/>
+                </svg>
+                Killed By (Enemy Weapons)
+            </h2>
+            @if($stats['killer_weapon_breakdown']->count() > 0)
+                <div class="space-y-4">
+                    @foreach($stats['killer_weapon_breakdown'] as $weapon => $count)
+                        <div class="group relative">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-3">
+                                    <x-item-icon :item="$weapon" size="lg" />
+                                    <span class="font-[Space_Grotesk] text-sm font-medium text-[#E8DCC8] group-hover:text-[#EF4444] transition-colors">
+                                        {{ ItemHelper::formatItemName($weapon) }}
+                                    </span>
+                                </div>
+                                <span class="font-[JetBrains_Mono] text-sm text-[#EF4444]/70">{{ $count }}</span>
+                            </div>
+                            <div class="relative h-3 bg-[#0A0A0A]/50 border border-[#4A4A4A]/30 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-[#EF4444] to-[#B91C1C] transition-all duration-700 ease-out"
+                                     style="width: {{ ($count / $stats['killer_weapon_breakdown']->first()) * 100 }}%">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="font-[Space_Grotesk] text-[#E8DCC8]/40 text-sm text-center py-8">No deaths by enemies recorded yet</p>
             @endif
         </div>
     </div>
