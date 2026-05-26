@@ -44,8 +44,8 @@ class InventoryImageService
             $iconData = $this->getIconData($item['Type']);
 
             if ($iconData) {
-                $icon = imagecreatefromstring($iconData);
-                if ($icon) {
+                $icon = @imagecreatefromstring($iconData);
+                if ($icon !== false) {
                     imagecopyresampled(
                         $canvas,
                         $icon,
@@ -92,7 +92,13 @@ class InventoryImageService
         // Check cache first
         $cached = ItemIconCache::where('item_type', $itemType)->first();
         if ($cached) {
-            return base64_decode($cached->image_data);
+            $imageData = base64_decode($cached->image_data);
+            // Validate cached image before returning
+            if ($imageData && @imagecreatefromstring($imageData) !== false) {
+                return $imageData;
+            }
+            // If cached image is corrupted, delete it and fetch fresh
+            $cached->delete();
         }
 
         // Fetch from API
