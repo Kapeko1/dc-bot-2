@@ -23,6 +23,7 @@ class ProcessedKill extends Model
         'victim_ip',
         'participants_count',
         'kill_area',
+        'has_tracked_player_party',
     ];
 
     protected $casts = [
@@ -32,6 +33,7 @@ class ProcessedKill extends Model
         'killer_ip' => 'integer',
         'victim_ip' => 'integer',
         'participants_count' => 'integer',
+        'has_tracked_player_party' => 'boolean',
     ];
 
     public function player(): BelongsTo

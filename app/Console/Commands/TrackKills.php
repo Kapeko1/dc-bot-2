@@ -67,6 +67,10 @@ class TrackKills extends Command
             $inventoryImage = $this->getInventoryImage($kill);
             $this->discord->sendKillAlert($kill, $inventoryImage);
 
+            // For kills: tracked player is the killer, check if killer had party
+            // GroupMembers includes the killer, so party means GroupMembers > 1
+            $hasTrackedPlayerParty = isset($kill['GroupMembers']) && count($kill['GroupMembers']) > 1;
+
             ProcessedKill::create([
                 'event_id' => $eventId,
                 'albion_player_id' => $player->albion_id,
@@ -83,6 +87,7 @@ class TrackKills extends Command
                 'victim_ip' => $kill['Victim']['AverageItemPower'] ?? 0,
                 'participants_count' => count($kill['Participants'] ?? []) + 1,
                 'kill_area' => $kill['KillArea'] ?? 'UNKNOWN',
+                'has_tracked_player_party' => $hasTrackedPlayerParty,
             ]);
 
             $newKills++;
@@ -108,6 +113,11 @@ class TrackKills extends Command
             $inventoryImage = $this->getInventoryImage($death);
             $this->discord->sendDeathAlert($death, $inventoryImage);
 
+            // For deaths: tracked player is the victim
+            // API doesn't provide victim's party info, only killer's party (GroupMembers)
+            // So we cannot determine if the victim had a party - set to false
+            $hasTrackedPlayerParty = false;
+
             ProcessedDeath::create([
                 'event_id' => $eventId,
                 'albion_player_id' => $player->albion_id,
@@ -124,6 +134,7 @@ class TrackKills extends Command
                 'victim_ip' => $death['Victim']['AverageItemPower'] ?? 0,
                 'participants_count' => count($death['Participants'] ?? []) + 1,
                 'kill_area' => $death['KillArea'] ?? 'UNKNOWN',
+                'has_tracked_player_party' => $hasTrackedPlayerParty,
             ]);
 
             $newDeaths++;

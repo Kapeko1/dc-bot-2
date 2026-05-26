@@ -36,13 +36,15 @@ class KillboardController extends Controller
             });
         }
 
-        // Filter by fight type based on participant count
+        // Filter by fight type based on tracked player party presence
         if ($fightType === '1v1') {
-            $killsQuery->where('participants_count', '=', 1);
-            $deathsQuery->where('participants_count', '=', 1);
+            // Solo: tracked player had no party
+            $killsQuery->where('has_tracked_player_party', false);
+            $deathsQuery->where('has_tracked_player_party', false);
         } elseif ($fightType === 'group') {
-            $killsQuery->where('participants_count', '>', 1);
-            $deathsQuery->where('participants_count', '>', 1);
+            // Group: tracked player had a party
+            $killsQuery->where('has_tracked_player_party', true);
+            $deathsQuery->where('has_tracked_player_party', true);
         }
 
         // Combine and sort
@@ -132,9 +134,9 @@ class KillboardController extends Controller
         }
 
         if ($fightType === '1v1') {
-            $killsQuery->where('participants_count', '=', 1);
+            $killsQuery->where('has_tracked_player_party', false);
         } elseif ($fightType === 'group') {
-            $killsQuery->where('participants_count', '>', 1);
+            $killsQuery->where('has_tracked_player_party', true);
         }
 
         $dailyKills = $killsQuery
@@ -155,9 +157,9 @@ class KillboardController extends Controller
         }
 
         if ($fightType === '1v1') {
-            $deathsQuery->where('participants_count', '=', 1);
+            $deathsQuery->where('has_tracked_player_party', false);
         } elseif ($fightType === 'group') {
-            $deathsQuery->where('participants_count', '>', 1);
+            $deathsQuery->where('has_tracked_player_party', true);
         }
 
         $dailyDeaths = $deathsQuery
