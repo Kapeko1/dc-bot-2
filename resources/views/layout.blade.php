@@ -17,7 +17,15 @@
     <div class="min-h-full relative">
         <!-- Background Image -->
         <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style="background-image: url('{{ asset('game_cover_21085.jpg.png') }}');"></div>
+            @php
+                $bgImage = match(request('instance')) {
+                    'open_world' => 'open_world.jpeg',
+                    'mists' => 'mists.jpeg',
+                    'corrupted' => 'corrupted.png',
+                    default => 'main.png',
+                };
+            @endphp
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style="background-image: url('{{ asset($bgImage) }}');"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/60 via-[#0A0A0A]/40 to-[#0A0A0A]/70"></div>
             <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#DC143C]/10 to-transparent blur-3xl"></div>
             <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D4AF37]/10 to-transparent blur-3xl"></div>
@@ -49,11 +57,35 @@
                             </div>
                         </a>
 
-                        <div class="hidden sm:flex items-baseline gap-6">
+                        <div class="hidden md:flex items-baseline gap-4">
                             <a href="{{ route('killboard.index') }}"
-                               class="relative px-4 py-2 font-[Space_Grotesk] text-sm font-medium tracking-wide uppercase transition-all duration-300 {{ request()->routeIs('killboard.index') ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
-                                <span class="relative z-10">Kill Log</span>
-                                @if(request()->routeIs('killboard.index'))
+                               class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ !request()->has('instance') ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
+                                <span class="relative z-10">All</span>
+                                @if(!request()->has('instance'))
+                                    <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#DC143C] to-transparent"></div>
+                                    <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
+                                @endif
+                            </a>
+                            <a href="{{ route('killboard.index', ['instance' => 'open_world']) }}"
+                               class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ request('instance') === 'open_world' ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
+                                <span class="relative z-10">Open World</span>
+                                @if(request('instance') === 'open_world')
+                                    <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#DC143C] to-transparent"></div>
+                                    <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
+                                @endif
+                            </a>
+                            <a href="{{ route('killboard.index', ['instance' => 'mists']) }}"
+                               class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ request('instance') === 'mists' ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
+                                <span class="relative z-10">Mists</span>
+                                @if(request('instance') === 'mists')
+                                    <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#DC143C] to-transparent"></div>
+                                    <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
+                                @endif
+                            </a>
+                            <a href="{{ route('killboard.index', ['instance' => 'corrupted']) }}"
+                               class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ request('instance') === 'corrupted' ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
+                                <span class="relative z-10">Corrupted</span>
+                                @if(request('instance') === 'corrupted')
                                     <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#DC143C] to-transparent"></div>
                                     <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
                                 @endif

@@ -14,6 +14,15 @@ class KillboardController extends Controller
     {
         $playerFilter = $request->get('player');
         $sortBy = $request->get('sort', 'recent');
+        $instance = $request->get('instance');
+
+        // Map instance parameter to kill_area values
+        $killAreaFilter = match($instance) {
+            'open_world' => 'OPEN_WORLD',
+            'mists' => 'MISTS',
+            'corrupted' => 'CORRUPTED',
+            default => null,
+        };
 
         // Combine kills and deaths into a single collection
         $killsQuery = ProcessedKill::query()
@@ -33,6 +42,11 @@ class KillboardController extends Controller
                 $q->where('killer_name', 'like', "%{$playerFilter}%")
                   ->orWhere('victim_name', 'like', "%{$playerFilter}%");
             });
+        }
+
+        if ($killAreaFilter) {
+            $killsQuery->where('kill_area', $killAreaFilter);
+            $deathsQuery->where('kill_area', $killAreaFilter);
         }
 
         // Combine and sort
