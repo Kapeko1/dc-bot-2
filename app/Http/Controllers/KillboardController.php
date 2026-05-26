@@ -14,15 +14,7 @@ class KillboardController extends Controller
     {
         $playerFilter = $request->get('player');
         $sortBy = $request->get('sort', 'recent');
-        $instance = $request->get('instance');
-
-        // Map instance parameter to kill_area values
-        $killAreaFilter = match($instance) {
-            'open_world' => 'OPEN_WORLD',
-            'mists' => 'MISTS',
-            'corrupted' => 'CORRUPTED',
-            default => null,
-        };
+        $fightType = $request->get('fight_type');
 
         // Combine kills and deaths into a single collection
         $killsQuery = ProcessedKill::query()
@@ -44,9 +36,13 @@ class KillboardController extends Controller
             });
         }
 
-        if ($killAreaFilter) {
-            $killsQuery->where('kill_area', $killAreaFilter);
-            $deathsQuery->where('kill_area', $killAreaFilter);
+        // Filter by fight type based on participant count
+        if ($fightType === '1v1') {
+            $killsQuery->where('participants_count', '=', 1);
+            $deathsQuery->where('participants_count', '=', 1);
+        } elseif ($fightType === 'group') {
+            $killsQuery->where('participants_count', '>', 1);
+            $deathsQuery->where('participants_count', '>', 1);
         }
 
         // Combine and sort
