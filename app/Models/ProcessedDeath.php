@@ -22,6 +22,7 @@ class ProcessedDeath extends Model
         'killer_ip',
         'victim_ip',
         'participants_count',
+        'kill_area',
     ];
 
     protected $casts = [

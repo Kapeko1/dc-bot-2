@@ -19,7 +19,7 @@ class DiscordWebhookService
     {
         $killer = $kill['Killer']['Name'] ?? 'Unknown';
         $victim = $kill['Victim']['Name'] ?? 'Unknown';
-        $location = $kill['Location'] ?? 'Unknown';
+        $killArea = $this->formatKillArea($kill['KillArea'] ?? 'UNKNOWN');
         $killId = $kill['EventId'];
         $time = substr($kill['TimeStamp'], 0, 19) . 'Z';
 
@@ -33,7 +33,7 @@ class DiscordWebhookService
             'fields' => [
                 ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
                 ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
-                ['name' => '📍 Location', 'value' => $location, 'inline' => false],
+                ['name' => '📍 Location', 'value' => $killArea, 'inline' => false],
                 ['name' => '🔗 Killboard', 'value' => "[View Details]({$killboardUrl})", 'inline' => false],
             ],
             'footer' => ['text' => "Kill ID: {$killId}"],
@@ -58,7 +58,7 @@ class DiscordWebhookService
     {
         $killer = $death['Killer']['Name'] ?? 'Unknown';
         $victim = $death['Victim']['Name'] ?? 'Unknown';
-        $location = $death['Location'] ?? 'Unknown';
+        $killArea = $this->formatKillArea($death['KillArea'] ?? 'UNKNOWN');
         $deathId = $death['EventId'];
         $time = substr($death['TimeStamp'], 0, 19) . 'Z';
 
@@ -72,7 +72,7 @@ class DiscordWebhookService
             'fields' => [
                 ['name' => '💀 Victim', 'value' => $victim, 'inline' => true],
                 ['name' => '🗡️ Killer', 'value' => $killer, 'inline' => true],
-                ['name' => '📍 Location', 'value' => $location, 'inline' => false],
+                ['name' => '📍 Location', 'value' => $killArea, 'inline' => false],
                 ['name' => '🔗 Killboard', 'value' => "[View Details]({$killboardUrl})", 'inline' => false],
             ],
             'footer' => ['text' => "Death ID: {$deathId}"],
@@ -91,5 +91,19 @@ class DiscordWebhookService
         } else {
             Http::post($this->deathsWebhookUrl, ['embeds' => [$embed]]);
         }
+    }
+
+    private function formatKillArea(string $killArea): string
+    {
+        return match($killArea) {
+            'OPEN_WORLD' => 'Open World',
+            'CORRUPTED' => 'Corrupted Dungeon',
+            'CORRUPTED_DUNGEON' => 'Corrupted Dungeon',
+            'HELLGATE' => 'Hellgate',
+            'ARENA' => 'Crystal Arena',
+            'MISTS' => 'Mists',
+            'UNKNOWN' => 'Unknown',
+            default => ucwords(str_replace('_', ' ', strtolower($killArea))),
+        };
     }
 }

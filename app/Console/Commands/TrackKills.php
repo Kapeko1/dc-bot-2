@@ -82,6 +82,7 @@ class TrackKills extends Command
                 'killer_ip' => $kill['Killer']['AverageItemPower'] ?? 0,
                 'victim_ip' => $kill['Victim']['AverageItemPower'] ?? 0,
                 'participants_count' => count($kill['Participants'] ?? []) + 1,
+                'kill_area' => $kill['KillArea'] ?? 'UNKNOWN',
             ]);
 
             $newKills++;
@@ -122,6 +123,7 @@ class TrackKills extends Command
                 'killer_ip' => $death['Killer']['AverageItemPower'] ?? 0,
                 'victim_ip' => $death['Victim']['AverageItemPower'] ?? 0,
                 'participants_count' => count($death['Participants'] ?? []) + 1,
+                'kill_area' => $death['KillArea'] ?? 'UNKNOWN',
             ]);
 
             $newDeaths++;
