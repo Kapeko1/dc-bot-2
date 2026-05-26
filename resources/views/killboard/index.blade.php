@@ -85,11 +85,11 @@
     <!-- Events List - Battle Records -->
     <div class="space-y-4">
         @forelse($events as $event)
-            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/98 via-[#1A0A0A]/98 to-[#2D2D2D]/98 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
+            <div class="group relative bg-gradient-to-r from-[#2D2D2D]/50 via-[#1A0A0A]/50 to-[#2D2D2D]/50 border-l-2 sm:border-l-4 {{ $event->event_type === 'kill' ? 'border-[#10B981]' : 'border-[#DC143C]' }} hover:border-[#D4AF37] transition-all duration-500 overflow-hidden cursor-pointer animate-on-scroll combat-texture" onclick="toggleDetails('event-{{ $event->id }}')" style="animation-delay: {{ $loop->index * 0.05 }}s">
                 <!-- Dramatic diagonal accent -->
                 <div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-{{ $event->event_type === 'kill' ? '[#10B981]' : '[#DC143C]' }}/10 to-transparent transform skew-x-12 group-hover:w-48 transition-all duration-500"></div>
 
-                <div class="relative z-10 p-3 sm:p-5">
+                <div class="relative z-10 p-3 sm:p-5 bg-gradient-to-b from-[#0A0A0A]/70 to-[#1A0A0A]/70">
                     <!-- Header Row with Badge, Time, and Fame -->
                     <div class="flex flex-wrap items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
                         <div class="flex items-center gap-2 sm:gap-4">
@@ -220,7 +220,7 @@
                 <!-- Expandable Details - Arsenal Display -->
                 @if($event->event_data)
                     <div id="event-{{ $event->id }}" class="hidden border-t border-[#DC143C]/20 sm:border-t-2">
-                        <div class="bg-gradient-to-b from-[#0A0A0A]/90 to-[#1A0A0A]/90 p-3 sm:p-6">
+                        <div class="bg-gradient-to-b from-[#0A0A0A]/70 to-[#1A0A0A]/70 p-3 sm:p-6">
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                                 <!-- Killer Equipment -->
                                 <div>
