@@ -154,9 +154,12 @@
                                     </div>
                                 @endif
                             </div>
-                            @if($event->participants_count > 1)
+                            @php
+                                $totalPlayers = $event->participants_count + 1; // participants + victim
+                            @endphp
+                            @if($totalPlayers > 2)
                                 <div class="mt-2 text-center">
-                                    <span class="font-[JetBrains_Mono] text-[0.55rem] sm:text-xs text-[#E8DCC8]/40 tracking-wider">{{ $event->participants_count }} PLAYERS</span>
+                                    <span class="font-[JetBrains_Mono] text-[0.55rem] sm:text-xs text-[#E8DCC8]/40 tracking-wider">{{ $totalPlayers }} PLAYERS</span>
                                 </div>
                             @endif
                         </div>
