@@ -16,8 +16,15 @@
 <body class="h-full text-[#E8DCC8] antialiased">
     <div class="min-h-full relative">
         <!-- Background Image -->
+        @php
+            $backgroundImage = match(request('fight_type')) {
+                '1v1' => asset('corrupted.png'),
+                'group' => asset('open_world.jpeg'),
+                default => asset('main.png'),
+            };
+        @endphp
         <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style="background-image: url('{{ asset('main.png') }}');"></div>
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40" style="background-image: url('{{ $backgroundImage }}');"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/60 via-[#0A0A0A]/40 to-[#0A0A0A]/70"></div>
             <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#DC143C]/10 to-transparent blur-3xl"></div>
             <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D4AF37]/10 to-transparent blur-3xl"></div>
@@ -50,7 +57,7 @@
                         </a>
 
                         <div class="hidden md:flex items-baseline gap-4">
-                            <a href="{{ route('killboard.index') }}"
+                            <a href="{{ route('killboard.index', array_filter(['player' => request('player')])) }}"
                                class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ !request()->has('fight_type') ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
                                 <span class="relative z-10">All</span>
                                 @if(!request()->has('fight_type'))
@@ -58,7 +65,7 @@
                                     <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
                                 @endif
                             </a>
-                            <a href="{{ route('killboard.index', ['fight_type' => '1v1']) }}"
+                            <a href="{{ route('killboard.index', array_filter(['fight_type' => '1v1', 'player' => request('player')])) }}"
                                class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ request('fight_type') === '1v1' ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
                                 <span class="relative z-10">1v1</span>
                                 @if(request('fight_type') === '1v1')
@@ -66,7 +73,7 @@
                                     <div class="absolute inset-0 bg-[#DC143C]/10 transform -skew-x-12"></div>
                                 @endif
                             </a>
-                            <a href="{{ route('killboard.index', ['fight_type' => 'group']) }}"
+                            <a href="{{ route('killboard.index', array_filter(['fight_type' => 'group', 'player' => request('player')])) }}"
                                class="relative px-3 py-2 font-[Space_Grotesk] text-xs font-medium tracking-wide uppercase transition-all duration-300 {{ request('fight_type') === 'group' ? 'text-[#DC143C]' : 'text-[#E8DCC8]/70 hover:text-[#DC143C]' }}">
                                 <span class="relative z-10">Group</span>
                                 @if(request('fight_type') === 'group')

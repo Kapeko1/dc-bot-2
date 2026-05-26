@@ -13,6 +13,11 @@
     <div class="relative metal-gradient border-2 border-[#DC143C]/30 p-4 sm:p-6 animate-on-scroll stagger-2 combat-texture overflow-hidden">
         <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#DC143C]/20 to-transparent blur-2xl"></div>
         <form method="GET" action="{{ route('killboard.index') }}" class="relative z-10 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <!-- Preserve fight_type filter when submitting form -->
+            @if($fightType)
+                <input type="hidden" name="fight_type" value="{{ $fightType }}">
+            @endif
+
             <div class="flex-1">
                 <label for="player" class="block font-[Space_Grotesk] text-xs font-semibold text-[#D4AF37] mb-2 tracking-widest uppercase">Search Player</label>
                 <input type="text"
@@ -39,7 +44,7 @@
                     <span class="relative z-10">Apply</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-[#D4AF37] to-[#8B7500] transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                 </button>
-                @if($playerFilter || $sortBy !== 'recent')
+                @if($playerFilter || $sortBy !== 'recent' || $fightType)
                     <a href="{{ route('killboard.index') }}"
                        class="px-4 sm:px-6 py-3 bg-[#2D2D2D] hover:bg-[#4A4A4A] text-[#E8DCC8] font-[Space_Grotesk] text-sm sm:text-base font-medium tracking-wide uppercase border-2 border-[#4A4A4A] hover:border-[#DC143C]/50 transition-all duration-300">
                         Clear

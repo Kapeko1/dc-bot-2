@@ -60,10 +60,10 @@ class KillboardController extends Controller
         // Get all tracked players for filter dropdown
         $players = Player::where('active', true)->orderBy('name')->get();
 
-        // Get daily statistics for the last 14 days
-        $dailyStats = $this->getDailyStats(14);
+        // Get daily statistics for the last 14 days with applied filters
+        $dailyStats = $this->getDailyStats(14, $fightType, $playerFilter);
 
-        return view('killboard.index', compact('events', 'players', 'playerFilter', 'sortBy', 'dailyStats'));
+        return view('killboard.index', compact('events', 'players', 'playerFilter', 'sortBy', 'dailyStats', 'fightType'));
     }
 
     public function player(string $albionId)
@@ -117,20 +117,50 @@ class KillboardController extends Controller
         return view('killboard.player', compact('player', 'kills', 'deaths', 'stats'));
     }
 
-    private function getDailyStats(int $days = 30): array
+    private function getDailyStats(int $days = 30, ?string $fightType = null, ?string $playerFilter = null): array
     {
         $startDate = now()->subDays($days)->startOfDay();
 
-        // Get daily kill counts
-        $dailyKills = ProcessedKill::where('killed_at', '>=', $startDate)
+        // Get daily kill counts with filters
+        $killsQuery = ProcessedKill::where('killed_at', '>=', $startDate);
+
+        if ($playerFilter) {
+            $killsQuery->where(function($q) use ($playerFilter) {
+                $q->where('killer_name', 'like', "%{$playerFilter}%")
+                  ->orWhere('victim_name', 'like', "%{$playerFilter}%");
+            });
+        }
+
+        if ($fightType === '1v1') {
+            $killsQuery->where('participants_count', '=', 1);
+        } elseif ($fightType === 'group') {
+            $killsQuery->where('participants_count', '>', 1);
+        }
+
+        $dailyKills = $killsQuery
             ->select(DB::raw('DATE(killed_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->orderBy('date')
             ->pluck('count', 'date')
             ->toArray();
 
-        // Get daily death counts
-        $dailyDeaths = ProcessedDeath::where('killed_at', '>=', $startDate)
+        // Get daily death counts with filters
+        $deathsQuery = ProcessedDeath::where('killed_at', '>=', $startDate);
+
+        if ($playerFilter) {
+            $deathsQuery->where(function($q) use ($playerFilter) {
+                $q->where('killer_name', 'like', "%{$playerFilter}%")
+                  ->orWhere('victim_name', 'like', "%{$playerFilter}%");
+            });
+        }
+
+        if ($fightType === '1v1') {
+            $deathsQuery->where('participants_count', '=', 1);
+        } elseif ($fightType === 'group') {
+            $deathsQuery->where('participants_count', '>', 1);
+        }
+
+        $dailyDeaths = $deathsQuery
             ->select(DB::raw('DATE(killed_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->orderBy('date')
